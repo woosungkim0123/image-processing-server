@@ -1,12 +1,14 @@
-const express = require('express');
-
 class ImageService {
     constructor(imageRepository) {
         this.imageRepository = imageRepository;
     }
     
-    getAllImages = () => {
-        return this.imageRepository.getAllImages();
+    getAllImages = async () => {
+        return await this.imageRepository.getAllImages();
+    }
+
+    saveImage = async (file) => {
+        await this.imageRepository.saveImage(file);
     }
 }
 

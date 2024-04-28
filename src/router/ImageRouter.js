@@ -9,12 +9,8 @@ class ImageRouter {
     }
     
     initRouter = () => {
-        this.router.post('/', this.multerUtil.getUploadMiddleware().single('imageTest'), (req, res) => {
-            console.log(req.file)
-            res.json(req.file)
-        });
-
         this.router.get('/', this.controller.getAllImages);
+        this.router.post('/', this.multerUtil.getUploadMiddleware().single('imageTest'), this.controller.saveImage);
     }
 
     getRouter = () => {

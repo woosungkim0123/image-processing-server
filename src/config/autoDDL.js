@@ -5,15 +5,10 @@ const autoDDL = () => {
     
     const insert = db.prepare("INSERT INTO images (name, url) VALUES ($name, $url)")
 
-    const imagesData = [
-        { name: "a.jpeg", url: "https://image1.com" },
-        { name: "b.jpeg", url: "https://image2.com" },
-        { name: "c.jpeg", url: "https://image3.com" }
-    ];
-
-    imagesData.forEach(data => {
+    for (let i = 0; i < 1000; i++) {
+        const data = { name: i + 1 + ".png", url: ""}
         insert.run(data);
-    });
+    }
 }
 
 module.exports = autoDDL
