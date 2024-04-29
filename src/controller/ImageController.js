@@ -9,10 +9,8 @@ class ImageController {
     }
 
     saveImage = async (req, res) => {
-        const { file } = req;
-        await this.service.saveImage(file);
-
-        return res.status(200).json({file});
+        await this.service.saveImage(req.resizedFile);
+        return res.status(200).json({file: req.resizedFile});
     }
 }
 
