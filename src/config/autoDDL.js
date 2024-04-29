@@ -5,8 +5,8 @@ const autoDDL = () => {
     
     const insert = db.prepare("INSERT INTO images (name, url) VALUES ($name, $url)")
 
-    for (let i = 0; i < 1000; i++) {
-        const data = { name: i + 1 + ".png", url: ""}
+    for (let i = 0; i < 68; i++) {
+        const data = { name: i + 1 + ".jpg", url: ""}
         insert.run(data);
     }
 }
