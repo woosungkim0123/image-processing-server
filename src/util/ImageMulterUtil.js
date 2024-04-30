@@ -4,6 +4,8 @@ const path = require('path');
 const mime = require('mime');
 const { v4: uuid } = require('uuid');
 const sharp = require('sharp');
+const multerS3 = require('multer-s3');
+const { s3 } = require('../aws');
 
 class ImageMulterUtil {
     constructor() {
@@ -22,9 +24,11 @@ class ImageMulterUtil {
     }
 
     initStorage() {
-        return multer.diskStorage({
-            destination: (req, file, cb) => cb(null, this.dir),
-            filename: (req, file, cb) => cb(null, `${uuid()}.${mime.extension(file.mimetype)}`)
+        return multerS3({
+            s3: s3,
+            bucket: process.env.AWS_BUCKET_NAME,
+            acl: 'public-read',
+            key: (req, file, cb) => cb(null, `raw/${uuid()}.${mime.extension(file.mimetype)}`)
         });
     }
 
