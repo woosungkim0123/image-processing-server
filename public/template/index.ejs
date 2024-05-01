@@ -80,7 +80,7 @@
             if (response.ok) {
                 for (let i = 0; i < data.images.length; i++) {
                     const img = new Image();
-                    img.src = "/public/images/" + data.images[i].name;
+                    img.src = data.images[i].url
                     img.style.width = '300px';
                     img.style.height = '300px';
                     img.style.marginRight = '10px';
@@ -94,12 +94,11 @@
         }
     };
 
-
     const uploadImage = async () => {
         try {
             const formData = new FormData();
             formData.append("imageTest", input.files[0]);
-
+            
             const response = await fetch('/images', {
                 method: 'POST',
                 body: formData,
@@ -107,7 +106,7 @@
             const data = await response.json();
             if (response.ok) {
                 const img = new Image();
-                img.src = "/public/images/" + data.file.filename;
+                img.src = data.file.location
                 img.style.width = '200px';
                 img.style.height = '200px';
                 img.style.marginRight = '10px';

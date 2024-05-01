@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const path = require('path');
 const Container = require('./container');
@@ -11,6 +12,7 @@ process.env.ROOT_DIR = rootDir;
 app.set('view engine', 'ejs');
 app.set('views', 'public/template')
 
+app.use(express.json());
 app.use("/public", express.static('public'));  // /public 주소
 
 autoDDL();

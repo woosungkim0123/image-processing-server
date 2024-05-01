@@ -1,3 +1,7 @@
+const { getSignedUrl } = require("../aws");
+const mime = require('mime');
+const { v4: uuid } = require('uuid');
+
 class ImageController {
     constructor(service) {
         this.service = service;
@@ -9,8 +13,8 @@ class ImageController {
     }
 
     saveImage = async (req, res) => {
-        await this.service.saveImage(req.resizedFile);
-        return res.status(200).json({file: req.resizedFile});
+        await this.service.saveImage(req.file);
+        return res.status(200).json({file: req.file});
     }
 }
 
