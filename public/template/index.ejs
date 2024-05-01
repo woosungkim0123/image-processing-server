@@ -96,6 +96,57 @@
 
     const uploadImage = async () => {
         try {
+            const response = await fetch('/images/presigned', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ contentTypes: [input.files[0].type] }),
+            });
+            const data = await response.json();
+            const result = await Promise.all(data.map((d, index) => {
+                const presigned = d.presigned;
+                
+                const formData = new FormData();
+                for (const key in presigned.fields) {
+                    formData.append(key, presigned.fields[key]);
+                }
+
+                formData.append('Content-Type', input.files[index].type)
+                formData.append('file', input.files[index]);
+                return fetch(presigned.url, {
+                    method: 'POST',
+                    body: formData,
+                });
+            }))
+
+            const res = await fetch('/images', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ imageInfo: { name: data[0].imageKey, url: data[0].presigned.url }}),
+            });
+            
+            if (res.ok) {
+                const img = new Image();
+                img.src = data[0].presigned.url + "/raw/" + data[0].imageKey
+                img.style.width = '200px';
+                img.style.height = '200px';
+                img.style.marginRight = '10px';
+                img.style.marginBottom = '10px';
+                imageList.prepend(img);
+            }
+
+
+        } catch (error) {
+            console.error('Error:', error);
+            alert('이미지 업로드에 실패했습니다.');
+        }
+    }
+
+    const uploadImage2 = async () => {
+        try {
             const formData = new FormData();
             formData.append("imageTest", input.files[0]);
             

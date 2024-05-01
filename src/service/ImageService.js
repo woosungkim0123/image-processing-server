@@ -7,8 +7,8 @@ class ImageService {
         return await this.imageRepository.getAllImages();
     }
 
-    saveImage = async (file) => {
-        await this.imageRepository.saveImage(file);
+    saveImage = async (imageInfo) => {
+        await this.imageRepository.saveImage(imageInfo);
     }
 }
 

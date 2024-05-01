@@ -9,11 +9,9 @@ class ImageRepository {
         return data
     }
 
-    saveImage = async (file) => {
-        console.log(file)
-        const filename = file.key.replace('raw/', '');
+    saveImage = async (imageInfo) => {
         const insert = await this.db.prepare("INSERT INTO images (name, url) VALUES ($name, $url)")
-        insert.run({ name: filename, url: file.location });
+        insert.run({ name: imageInfo.name, url: imageInfo.url + "/raw/" + imageInfo.name });
     }
 
 }

@@ -10,7 +10,8 @@ class ImageRouter {
     
     initRouter = () => {
         this.router.get('/', this.controller.getAllImages);
-        this.router.post('/', this.multerUtil.upload.single('imageTest'), this.controller.saveImage);
+        this.router.post('/', this.controller.saveImageInfo);
+        this.router.post('/presigned', this.controller.getPresignedUrl)
     }
 
     getRouter = () => {
