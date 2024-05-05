@@ -80,7 +80,9 @@
             if (response.ok) {
                 for (let i = 0; i < data.images.length; i++) {
                     const img = new Image();
-                    img.src = data.images[i].url
+                    // img.src = data.images[i].url
+                    // 잘라서 https://d1ir2x6dum8omm.cloudfront.net 
+                    img.src = "https://d1ir2x6dum8omm.cloudfront.net" + "/w600/" + data.images[i].name;
                     img.style.width = '300px';
                     img.style.height = '300px';
                     img.style.marginRight = '10px';
@@ -129,16 +131,39 @@
             });
             
             if (res.ok) {
+              let initialLoad = true; // 초기 로드 상태 플래그
+              let intervalId = null; 
                 const img = new Image();
-                img.src = data[0].presigned.url + "/raw/" + data[0].imageKey
-                img.style.width = '200px';
-                img.style.height = '200px';
+                //img.src = data[0].presigned.url + "/w140/" + data[0].imageKey
+                img.src = "https://d1ir2x6dum8omm.cloudfront.net" + "/w140/" + data[0].imageKey
+                img.onerror = () => {
+                  if (initialLoad) {
+                    console.log('Failed to load w140, switching to raw');
+                    //img.src = data[0].presigned.url + "/raw/" + data[0].imageKey; // s3에 직접
+                    img.src = "https://d1ir2x6dum8omm.cloudfront.net" + "/raw/" + data[0].imageKey; // cdn 사용
+                    initialLoad = false; // 초기 로드 상태 업데이트
+                  }
+                }
+                img.onload = function() {
+                    if (initialLoad) {
+                        console.log('w140 image loaded successfully');
+                        clearInterval(intervalId); // w140 이미지가 성공적으로 로드되면 인터벌 중지
+                    } else {
+                        console.log('Raw image loaded, checking for w140');
+                        intervalId = setInterval(() => {
+                            console.log('Attempting to reload w140 image');
+                            //img.src = data[0].presigned.url + "/w140/" + data[0].imageKey;
+                            img.src = "https://d1ir2x6dum8omm.cloudfront.net" + "/w140/" + data[0].imageKey;
+                            initialLoad = true;
+                        }, 5000); // 5초마다 재시도
+                    }
+                };
+                img.style.width = '300px';
+                img.style.height = '300px';
                 img.style.marginRight = '10px';
                 img.style.marginBottom = '10px';
                 imageList.prepend(img);
             }
-
-
         } catch (error) {
             console.error('Error:', error);
             alert('이미지 업로드에 실패했습니다.');
@@ -158,8 +183,12 @@
             if (response.ok) {
                 const img = new Image();
                 img.src = data.file.location
-                img.style.width = '200px';
-                img.style.height = '200px';
+                img.style.width = '300px';
+                img.style.height = '300px';
+                img.onerror = () => {
+                    // img.src = data[0].presigned.url + "/raw/" + data[0].imageKey;
+                    img.src = "https://d1ir2x6dum8omm.cloudfront.net" + "/w600/" + data[0].imageKey;
+                }
                 img.style.marginRight = '10px';
                 img.style.marginBottom = '10px';
                 imageList.prepend(img);

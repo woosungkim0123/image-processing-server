@@ -11,7 +11,7 @@ class ImageRepository {
 
     saveImage = async (imageInfo) => {
         const insert = await this.db.prepare("INSERT INTO images (name, url) VALUES ($name, $url)")
-        insert.run({ name: imageInfo.name, url: imageInfo.url + "/raw/" + imageInfo.name });
+        insert.run({ name: imageInfo.name, url: imageInfo.url + "/w600/" + imageInfo.name });
     }
 
 }
